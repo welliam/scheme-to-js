@@ -15,7 +15,7 @@
   (define body (object-code (second arg-list)))
   (format "(function (~A) { return ~A; })" params body))
 
-(define (format-applcation op arg-list)
+(define (format-application op arg-list)
   (format "~A(~A)"
           (object-code op)
           (format-argument-list arg-list)))
