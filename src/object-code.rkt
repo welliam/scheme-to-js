@@ -10,22 +10,21 @@
 (define (format-argument-list args)
   (if (null? args) "" (intersperse-commas (map object-code args))))
 
-(define (format-function arg-list)
-  (define params (apply string-append (map object-code (car arg-list))))
-  (define body (object-code (second arg-list)))
-  (format "(function (~A) { return ~A; })" params body))
+(define (format-function params body)
+  (define js-params (apply string-append (map object-code params)))
+  (define js-body (object-code body))
+  (format "(function (~A) { return ~A; })" js-params js-body))
 
 (define (format-application op arg-list)
   (format "~A(~A)"
           (object-code op)
           (format-argument-list arg-list)))
 
-(define (object-code x)
-  (cond
-   ((list? x)
-    (match-define (cons op arg-list) x)
-    (if (equal? op 'lambda)
-        (format-function arg-list)
-        (format-application op arg-list)))
-   (else
-    (format "~S" x))))
+(define/match (object-code x)
+  (((list 'lambda args body))
+   (format-function args body))
+  (((list 'define id exp))
+   (format "var ~S = ~A;" id (object-code exp)))
+  (((list* op args))
+   (format-application op args))
+  ((x) (format "~S" x)))

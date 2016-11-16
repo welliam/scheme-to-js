@@ -30,4 +30,8 @@
 
    (check-equal? (object-code '(lambda (x) x))
                  "(function (x) { return x; })"
-                 "Anonymous identity function.")))
+                 "Anonymous identity function.")
+
+   (check-equal? (object-code '(define x 0))
+                 "var x = 0;"
+                 "Variable definition.")))
