@@ -40,4 +40,12 @@
                   '(define f
                      (lambda (x)
                        (x x x))))
-                 "var f = (function (x) { return x(x, x); });")))
+                 "var f = (function (x) { return x(x, x); });")
+
+   (check-equal? (object-code '(set-field! f "hello" 0))
+                 "f[\"hello\"] = 0;"
+                 "Field assignment.")
+
+   (check-equal? (object-code '(set-field! (lambda (x) x) -1 (foo bar)))
+                 "(function (x) { return x; })[-1] = foo(bar);"
+                 "Field assignment.")))
