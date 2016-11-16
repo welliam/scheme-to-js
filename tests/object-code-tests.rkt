@@ -56,4 +56,12 @@
 
    (check-equal? (object-code '(field-ref (lambda (x) x) bar))
                  "(function (x) { return x; })[bar]"
-                 "Field reference.")))
+                 "Field reference.")
+
+   (check-equal? (object-code '(operator * 2 3))
+                 "(2 * 3)"
+                 "Multiplication.")
+
+   (check-equal? (object-code '(operator + (operator * 2 3) (operator % 5 3)))
+                 "((2 * 3) + (5 % 3))"
+                 "Math.")))

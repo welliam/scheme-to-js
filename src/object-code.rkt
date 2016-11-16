@@ -34,6 +34,11 @@
            (object-code of)
            (object-code field)
            (object-code to)))
+  (((list 'operator operator lhs rhs))
+   (format "(~A ~A ~A)"
+           (object-code lhs)
+           operator
+           (object-code rhs)))
   (((list* op args))
    (format-application op args))
   ((x) (format "~S" x)))
