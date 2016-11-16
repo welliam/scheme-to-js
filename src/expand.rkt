@@ -17,7 +17,8 @@
     (+ . +)
     (- . -)
     (* . *)
-    (/ . /)))
+    (/ . /)
+    (eq? . ==)))
 
 (define (operator-expansion op lhs rhs)
   `(operator ,(cdr (assq op operators)) ,(expand lhs) ,(expand rhs)))

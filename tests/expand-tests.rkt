@@ -21,7 +21,10 @@
     (check-equal? (expand '(+ lhs rhs)) '(operator + lhs rhs))
     (check-equal? (expand '(- lhs rhs)) '(operator - lhs rhs))
     (check-equal? (expand '(* lhs rhs)) '(operator * lhs rhs))
-    (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs)))
+    (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs))
+    (check-equal? (expand '(eq? lhs rhs)) '(operator == lhs rhs))
+    (check-equal? (expand '(define (eq? a b) (eq? a b)))
+                  '(define eq? (lambda (a b) (operator == a b)))))
 
   (test-suite "single arm if"
     (check-equal? (expand '(if 1 2)) '(if 1 2 #f)))
