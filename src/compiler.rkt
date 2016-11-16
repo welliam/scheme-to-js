@@ -2,7 +2,7 @@
 
 (provide compile-file)
 
-(require "object-code.rkt")
+(require "object-code.rkt" "expand.rkt")
 
 (define (string-join strings)
   (foldr (lambda (x s) (string-append x "\n" s))
@@ -17,4 +17,6 @@
         (cons x (loop)))))
 
 (define (compile-file filename)
-  (string-join (map object-code (with-input-from-file filename read-all))))
+  (string-join
+   (map (compose object-code expand)
+        (with-input-from-file filename read-all))))
