@@ -34,4 +34,10 @@
 
    (check-equal? (object-code '(define x 0))
                  "var x = 0;"
-                 "Variable definition.")))
+                 "Variable definition.")
+
+   (check-equal? (object-code
+                  '(define f
+                     (lambda (x)
+                       (x x x))))
+                 "var f = (function (x) { return x(x, x); });")))
