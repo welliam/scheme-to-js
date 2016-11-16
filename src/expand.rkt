@@ -8,9 +8,8 @@
       match-form
       (x x))))
 
-(define function-define-expansion
-  (expansion (list 'define (cons op args) body)
-             `(define ,op (lambda ,args ,body))))
+(define (function-define-expansion op args body)
+  `(define ,op ,(expand `(lambda ,args ,body))))
 
 (define operators
   `((and . &&)
@@ -20,15 +19,20 @@
     (* . *)
     (/ . /)))
 
-(define operator-expansion
-  (expansion (list op lhs rhs)
-             #:when (memq op (map car operators))
-             `(operator ,(cdr (assq op operators)) ,lhs ,rhs)))
+(define (operator-expansion op lhs rhs)
+  `(operator ,(cdr (assq op operators)) ,(expand lhs) ,(expand rhs)))
 
-(define if-expansion
-  (expansion (list 'if a b) `(if ,a ,b #f)))
+(define (if-expansion a b)
+  `(if ,(expand a) ,(expand b) #f))
 
-(define expand
-  (compose function-define-expansion
-           operator-expansion
-           if-expansion))
+(define/match (expand form)
+  (((list 'define (cons op args) body))
+   (function-define-expansion op args body))
+  (((list 'if pred then))
+   (if-expansion pred then))
+  (((list op lhs rhs))
+   #:when (memq op (map car operators))
+   (operator-expansion op lhs rhs))
+  (((cons f args))
+   (cons (expand f) (expand args)))
+  ((x) x))

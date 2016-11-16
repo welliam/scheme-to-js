@@ -24,5 +24,9 @@
     (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs)))
 
   (test-suite "single arm if"
-    (check-equal? (expand '(if 1 2)) '(if 1 2 #f))))
+    (check-equal? (expand '(if 1 2)) '(if 1 2 #f)))
+
+  (test-suite "compound expansions"
+    (check-equal? (expand '(f (if 1 2) (if 1 2)))
+                  '(f (if 1 2 #f) (if 1 2 #f)))))
 
