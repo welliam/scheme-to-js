@@ -23,7 +23,8 @@
   (check-equal? (expand '(define (f . foo) x)) '(define f (lambda foo x))))
 
 (define-test-suite implicit-begin
-  (check-equal? (expand '(lambda (x) x x x)) '(lambda (x) (begin x x x))))
+  (check-equal? (expand '(lambda (x) x x x)) '(lambda (x) (begin x x x)))
+  (check-equal? (expand '(define (f) 1 2)) '(define f (lambda () (begin 1 2)))))
 
 (define-test-suite operators
   (check-equal? (expand '(and lhs rhs)) '(operator && lhs rhs))

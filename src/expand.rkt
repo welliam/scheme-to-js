@@ -2,14 +2,8 @@
 
 (provide expand)
 
-(define-syntax-rule (expansion . match-form)
-  (lambda (form)
-    (match form
-      match-form
-      (x x))))
-
-(define (function-define-expansion op args body)
-  `(define ,op ,(expand `(lambda ,args ,body))))
+(define (function-define-expansion op args bodies)
+  `(define ,op ,(expand `(lambda ,args . ,bodies))))
 
 (define operators
   `((and . &&)
@@ -22,8 +16,8 @@
   `(if ,(expand a) ,(expand b) #f))
 
 (define/match (expand form)
-  (((list 'define (cons op args) body))
-   (function-define-expansion op args body))
+  (((list* 'define (cons op args) body body*))
+   (function-define-expansion op args (cons body body*)))
   (((list 'if pred then))
    (if-expansion pred then))
   (((list op lhs rhs))
