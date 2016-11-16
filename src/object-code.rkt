@@ -20,25 +20,37 @@
           (object-code op)
           (format-argument-list arg-list)))
 
+(define (format-field-ref of field)
+  (format "~A[~A]"
+          (object-code of)
+          (object-code field)))
+
+(define (format-field-set! of field to)
+  (format "~A[~A] = ~A;"
+          (object-code of)
+          (object-code field)
+          (object-code to)))
+
+(define (format-operator operator lhs rhs)
+  (format "(~A ~A ~A)"
+          (object-code lhs)
+          operator
+          (object-code rhs)))
+
+(define (format-self-evaluating x)
+  (format "~S" x))
+
 (define/match (object-code x)
   (((list 'lambda args body))
    (format-function args body))
   (((list 'define id exp))
    (format "var ~S = ~A;" id (object-code exp)))
   (((list 'field-ref of field))
-   (format "~A[~A]"
-           (object-code of)
-           (object-code field)))
+   (format-field-ref of field))
   (((list 'field-set! of field to))
-   (format "~A[~A] = ~A;"
-           (object-code of)
-           (object-code field)
-           (object-code to)))
+   (format-field-set! of field to))
   (((list 'operator operator lhs rhs))
-   (format "(~A ~A ~A)"
-           (object-code lhs)
-           operator
-           (object-code rhs)))
+   (format-operator operator lhs rhs))
   (((list* op args))
    (format-application op args))
-  ((x) (format "~S" x)))
+  ((x) (format-self-evaluating x)))
