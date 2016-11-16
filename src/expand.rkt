@@ -25,6 +25,10 @@
              #:when (memq op (map car operators))
              `(operator ,(cdr (assq op operators)) ,lhs ,rhs)))
 
+(define if-expansion
+  (expansion (list 'if a b) `(if ,a ,b #f)))
+
 (define expand
   (compose function-define-expansion
-           operator-expansion))
+           operator-expansion
+           if-expansion))

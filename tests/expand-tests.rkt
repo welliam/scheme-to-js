@@ -21,5 +21,8 @@
     (check-equal? (expand '(+ lhs rhs)) '(operator + lhs rhs))
     (check-equal? (expand '(- lhs rhs)) '(operator - lhs rhs))
     (check-equal? (expand '(* lhs rhs)) '(operator * lhs rhs))
-    (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs))))
+    (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs)))
+
+  (test-suite "single arm if"
+    (check-equal? (expand '(if 1 2)) '(if 1 2 #f))))
 
