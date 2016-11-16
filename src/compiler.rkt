@@ -1,6 +1,6 @@
 #lang racket
 
-(provide compile-file)
+(provide compile compile-file)
 
 (require "object-code.rkt" "expand.rkt")
 
@@ -16,7 +16,8 @@
         '()
         (cons x (loop)))))
 
+(define compile (compose object-code expand))
+
 (define (compile-file filename)
   (string-join
-   (map (compose object-code expand)
-        (with-input-from-file filename read-all))))
+   (map compile (with-input-from-file filename read-all))))
