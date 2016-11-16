@@ -72,7 +72,7 @@
                   "((2 * 3) + (5 % 3))"
                  "Math"))
 
-  (test-suite "Ternary operator."
+  (test-suite "Ternary operator"
     (check-equal? (object-code '(if a b c))
                   "(a ? b : c)")
     (check-equal? (object-code '(if (if a b c) (if d e f) (if g h i)))
