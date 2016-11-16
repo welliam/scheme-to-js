@@ -23,14 +23,7 @@
 
 (define-test-suite operators
   (check-equal? (expand '(and lhs rhs)) '(operator && lhs rhs))
-  (check-equal? (expand '(or lhs rhs)) '(operator "||" lhs rhs))
-  (check-equal? (expand '(+ lhs rhs)) '(operator + lhs rhs))
-  (check-equal? (expand '(- lhs rhs)) '(operator - lhs rhs))
-  (check-equal? (expand '(* lhs rhs)) '(operator * lhs rhs))
-  (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs))
-  (check-equal? (expand '(eq? lhs rhs)) '(operator == lhs rhs))
-  (check-equal? (expand '(define (eq? a b) (eq? a b)))
-                '(define eq? (lambda (a b) (operator == a b)))))
+  (check-equal? (expand '(or lhs rhs)) '(operator "||" lhs rhs)))
 
 (define-test-suite single-arm-if
   (check-equal? (expand '(if 1 2)) '(if 1 2 #f)))
