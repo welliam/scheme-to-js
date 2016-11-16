@@ -13,4 +13,13 @@
     (check-equal? (expand '(define (f) x)) '(define f (lambda () x)))
     (check-equal? (expand '(define (f x) x)) '(define f (lambda (x) x)))
     (check-equal? (expand '(define (f x y) x)) '(define f (lambda (x y) x)))
-    (check-equal? (expand '(define (f . foo) x)) '(define f (lambda foo x)))))
+    (check-equal? (expand '(define (f . foo) x)) '(define f (lambda foo x))))
+
+  (test-suite "operators"
+    (check-equal? (expand '(and lhs rhs)) '(operator && lhs rhs))
+    (check-equal? (expand '(or lhs rhs)) '(operator "||" lhs rhs))
+    (check-equal? (expand '(+ lhs rhs)) '(operator + lhs rhs))
+    (check-equal? (expand '(- lhs rhs)) '(operator - lhs rhs))
+    (check-equal? (expand '(* lhs rhs)) '(operator * lhs rhs))
+    (check-equal? (expand '(/ lhs rhs)) '(operator / lhs rhs))))
+
