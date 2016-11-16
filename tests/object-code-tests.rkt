@@ -1,67 +1,69 @@
 #lang racket
 
-(provide object-code-tests)
 (require rackunit "../src/object-code.rkt")
 
-(define object-code-tests
-  (test-suite
-   "Tests for object-code.rkt"
-   (check-equal? (object-code 3) "3" "Basic number compilation.")
+(define/provide-test-suite object-code-tests
+  (test-suite "Simple objects"
+    (check-equal? (object-code 3) "3" "Basic number compilation.")
+    (check-equal? (object-code "hello") "\"hello\"" "Basic string compilation.")
+    (check-equal? (object-code 'x) "x" "Symbol compilation."))
 
-   (check-equal? (object-code "hello") "\"hello\"" "Basic string compilation.")
-
-   (check-equal? (object-code 'x) "x" "Symbol compilation.")
-
-   (check-equal? (object-code '(foo)) "foo()" "Basic function application.")
-   (check-equal? (object-code '(foo bar)) "foo(bar)" "Function with argument.")
-   (check-equal? (object-code '(foo bar baz))
-                 "foo(bar, baz)"
-                 "Function with two arguments.")
-   (check-equal? (object-code '(foo bar baz quux))
-                 "foo(bar, baz, quux)"
-                 "Function with three arguments.")
-   (check-equal? (object-code '((a 1) (a 2)))
+  (test-suite "Application"
+    (check-equal? (object-code '(foo)) "foo()" "Basic function application.")
+    (check-equal? (object-code '(foo bar)) "foo(bar)" "Function with argument.")
+    (check-equal? (object-code '(foo bar baz))
+                  "foo(bar, baz)"
+                  "Function with two arguments.")
+    (check-equal? (object-code '(foo bar baz quux))
+                  "foo(bar, baz, quux)"
+                  "Function with three arguments.")
+    (check-equal? (object-code '((a 1) (a 2)))
                  "a(1)(a(2))"
-                 "Embedded application.")
+                 "Embedded application."))
 
-   (check-equal? (object-code '(lambda (x) x))
-                 "(function (x) { return x; })"
-                 "Anonymous identity function.")
+  (test-suite "Procedures"
+    (check-equal? (object-code '(lambda (x) x))
+                  "(function (x) { return x; })"
+                  "Anonymous identity function.")
 
-   (check-equal? (object-code '(lambda (x) x))
-                 "(function (x) { return x; })"
-                 "Anonymous identity function.")
+    (check-equal? (object-code '(lambda (x) x))
+                  "(function (x) { return x; })"
+                  "Anonymous identity function."))
 
-   (check-equal? (object-code '(define x 0))
-                 "var x = 0;"
-                 "Variable definition.")
+  (test-suite "Variables"
+    (check-equal? (object-code '(define x 0))
+                  "var x = 0;"
+                  "Variable definition.")
 
-   (check-equal? (object-code
-                  '(define f
-                     (lambda (x)
-                       (x x x))))
-                 "var f = (function (x) { return x(x, x); });")
+    (check-equal? (object-code
+                   '(define f
+                      (lambda (x)
+                        (x x x))))
+                  "var f = (function (x) { return x(x, x); });"
+                  "Function definition."))
 
-   (check-equal? (object-code '(field-set! f "hello" 0))
-                 "f[\"hello\"] = 0;"
-                 "Field assignment.")
+  (test-suite "Field assignment"
+    (check-equal? (object-code '(field-set! f "hello" 0))
+                  "f[\"hello\"] = 0;"
+                  "Field assignment.")
 
-   (check-equal? (object-code '(field-set! (lambda (x) x) -1 (foo bar)))
-                 "(function (x) { return x; })[-1] = foo(bar);"
-                 "Field assignment.")
+    (check-equal? (object-code '(field-set! (lambda (x) x) -1 (foo bar)))
+                  "(function (x) { return x; })[-1] = foo(bar);"
+                  "Field assignment.")
 
-   (check-equal? (object-code '(field-ref foo bar))
-                 "foo[bar]"
-                 "Field reference.")
+    (check-equal? (object-code '(field-ref foo bar))
+                  "foo[bar]"
+                  "Field reference.")
 
-   (check-equal? (object-code '(field-ref (lambda (x) x) bar))
-                 "(function (x) { return x; })[bar]"
-                 "Field reference.")
+    (check-equal? (object-code '(field-ref (lambda (x) x) bar))
+                  "(function (x) { return x; })[bar]"
+                  "Field reference."))
 
-   (check-equal? (object-code '(operator * 2 3))
-                 "(2 * 3)"
-                 "Multiplication.")
+  (test-suite "Operators"
+    (check-equal? (object-code '(operator * 2 3))
+                  "(2 * 3)"
+                  "Multiplication.")
 
-   (check-equal? (object-code '(operator + (operator * 2 3) (operator % 5 3)))
-                 "((2 * 3) + (5 % 3))"
-                 "Math.")))
+    (check-equal? (object-code '(operator + (operator * 2 3) (operator % 5 3)))
+                  "((2 * 3) + (5 % 3))"
+                 "Math")))
