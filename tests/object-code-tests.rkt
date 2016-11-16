@@ -48,4 +48,12 @@
 
    (check-equal? (object-code '(field-set! (lambda (x) x) -1 (foo bar)))
                  "(function (x) { return x; })[-1] = foo(bar);"
-                 "Field assignment.")))
+                 "Field assignment.")
+
+   (check-equal? (object-code '(field-ref foo bar))
+                 "foo[bar]"
+                 "Field reference.")
+
+   (check-equal? (object-code '(field-ref (lambda (x) x) bar))
+                 "(function (x) { return x; })[bar]"
+                 "Field reference.")))

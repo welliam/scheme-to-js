@@ -25,6 +25,10 @@
    (format-function args body))
   (((list 'define id exp))
    (format "var ~S = ~A;" id (object-code exp)))
+  (((list 'field-ref of field))
+   (format "~A[~A]"
+           (object-code of)
+           (object-code field)))
   (((list 'field-set! of field to))
    (format "~A[~A] = ~A;"
            (object-code of)
