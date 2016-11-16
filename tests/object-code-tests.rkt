@@ -8,12 +8,14 @@
   procedures
   variables
   object-fields
-  ternary-operator)
+  ternary-operator
+  begins)
 
 (define-test-suite simple-objects
   (check-equal? (object-code 3) "3" "Basic number compilation.")
   (check-equal? (object-code "hello") "\"hello\"" "Basic string compilation.")
-  (check-equal? (object-code 'x) "x" "Symbol compilation."))
+  (check-equal? (object-code 'x) "x" "Symbol compilation.")
+  (check-equal? (object-code '(make-object)) "{}" "Object creation."))
 
 (define-test-suite applications
   (check-equal? (object-code '(foo)) "foo()" "Basic function application.")
@@ -73,7 +75,14 @@
                 "Math"))
 
 (define-test-suite ternary-operator
-    (check-equal? (object-code '(if a b c))
-                  "(a ? b : c)")
-    (check-equal? (object-code '(if (if a b c) (if d e f) (if g h i)))
-                  "((a ? b : c) ? (d ? e : f) : (g ? h : i))"))
+  (check-equal? (object-code '(if a b c))
+                "(a ? b : c)")
+  (check-equal? (object-code '(if (if a b c) (if d e f) (if g h i)))
+                "((a ? b : c) ? (d ? e : f) : (g ? h : i))"))
+
+(define-test-suite begins
+  (check-equal? (object-code '(begin 1 2 3))
+                "1\n2\n3\n")
+  (check-equal? (object-code
+                 '(begin (define x 2) (define y 3) (operator "+" x y)))
+                "var x = 2;\nvar y = 3;\n(x + y)\n"))
