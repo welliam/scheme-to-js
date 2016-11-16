@@ -5,6 +5,7 @@
 (define/provide-test-suite expand-tests
   fix-points
   defun
+  implicit-begin
   operators
   single-arm-if
   compound-expansions)
@@ -20,6 +21,9 @@
   (check-equal? (expand '(define (f x) x)) '(define f (lambda (x) x)))
   (check-equal? (expand '(define (f x y) x)) '(define f (lambda (x y) x)))
   (check-equal? (expand '(define (f . foo) x)) '(define f (lambda foo x))))
+
+(define-test-suite implicit-begin
+  (check-equal? (expand '(lambda (x) x x x)) '(lambda (x) (begin x x x))))
 
 (define-test-suite operators
   (check-equal? (expand '(and lhs rhs)) '(operator && lhs rhs))
