@@ -1,5 +1,5 @@
 #lang racket
 
-(require rackunit/text-ui "object-code-tests.rkt")
+(require rackunit rackunit/text-ui "object-code-tests.rkt" "expand-tests.rkt")
  
-(run-tests object-code-tests)
+(run-tests (test-begin object-code-tests expand-tests))
