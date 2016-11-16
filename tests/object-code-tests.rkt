@@ -28,7 +28,11 @@
 
     (check-equal? (object-code '(lambda (x) x))
                   "(function (x) { return x; })"
-                  "Anonymous identity function."))
+                  "Anonymous identity function.")
+
+    (check-equal? (object-code '(lambda (f x) (f x)))
+                  "(function (f, x) { return f(x); })"
+                  "Multiarg function."))
 
   (test-suite "Variables"
     (check-equal? (object-code '(define x 0))
@@ -66,4 +70,10 @@
 
     (check-equal? (object-code '(operator + (operator * 2 3) (operator % 5 3)))
                   "((2 * 3) + (5 % 3))"
-                 "Math")))
+                 "Math"))
+
+  (test-suite "Ternary operator."
+    (check-equal? (object-code '(if a b c))
+                  "(a ? b : c)")
+    (check-equal? (object-code '(if (if a b c) (if d e f) (if g h i)))
+                  "((a ? b : c) ? (d ? e : f) : (g ? h : i))")))

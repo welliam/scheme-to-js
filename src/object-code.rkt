@@ -11,7 +11,7 @@
   (if (null? args) "" (intersperse-commas (map object-code args))))
 
 (define (format-function params body)
-  (define js-params (apply string-append (map object-code params)))
+  (define js-params (format-argument-list params))
   (define js-body (object-code body))
   (format "(function (~A) { return ~A; })" js-params js-body))
 
@@ -40,11 +40,19 @@
 (define (format-self-evaluating x)
   (format "~S" x))
 
+(define (format-ternary-operator pred then else)
+  (format "(~A ? ~A : ~A)"
+          (object-code pred)
+          (object-code then)
+          (object-code else)))
+
 (define/match (object-code x)
   (((list 'lambda args body))
    (format-function args body))
   (((list 'define id exp))
    (format "var ~S = ~A;" id (object-code exp)))
+  (((list 'if pred then else))
+   (format-ternary-operator pred then else))
   (((list 'field-ref of field))
    (format-field-ref of field))
   (((list 'field-set! of field to))
