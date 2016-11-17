@@ -38,7 +38,7 @@
                       1)))))
 
 (define-test-suite operators
-  (check-equal? (expand '(and lhs rhs)) '(operator && lhs rhs))
+  (check-equal? (expand '(and lhs rhs)) '(operator "&&" lhs rhs))
   (check-equal? (expand '(or lhs rhs)) '(operator "||" lhs rhs)))
 
 (define-test-suite single-arm-if

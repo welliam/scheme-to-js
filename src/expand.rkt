@@ -6,7 +6,7 @@
   `(define ,op ,(expand `(lambda ,args . ,bodies))))
 
 (define operators
-  `((and . &&)
+  `((and . "&&")
     (or . "||")))
 
 (define (operator-expansion op lhs rhs)
