@@ -23,8 +23,19 @@
   (check-equal? (expand '(define (f . foo) x)) '(define f (lambda foo x))))
 
 (define-test-suite implicit-begin
-  (check-equal? (expand '(lambda (x) x x x)) '(lambda (x) (begin x x x)))
-  (check-equal? (expand '(define (f) 1 2)) '(define f (lambda () (begin 1 2)))))
+  (check-equal? (expand '(lambda (foo) foo foo foo))
+                '(lambda (foo)
+                   ((lambda (x)
+                      ((lambda (x)
+                         foo)
+                       foo))
+                    foo)))
+  (check-equal? (expand '(define (f) 1 2))
+                '(define f
+                   (lambda () 
+                     ((lambda (x)
+                        2)
+                      1)))))
 
 (define-test-suite operators
   (check-equal? (expand '(and lhs rhs)) '(operator && lhs rhs))
@@ -36,3 +47,16 @@
 (define-test-suite compound-expansions
   (check-equal? (expand '(f (if 1 2) (if 1 2)))
                 '(f (if 1 2 #f) (if 1 2 #f))))
+
+(define-test-suite begins
+  (check-equal? '(begin 1) 1)
+  (check-equal? '(begin 1 2)
+                '((lambda (x)
+                    2)
+                  1))
+  (check-equal? '(begin 1 2 3)
+                '((lambda (x)
+                    ((lambda (x)
+                       3)
+                     2)
+                  1))))
