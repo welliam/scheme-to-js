@@ -2,7 +2,7 @@
 
 (provide compile compile-file)
 
-(require "object-code.rkt" "expand.rkt")
+(require "object-code.rkt" "expand.rkt" "rename.rkt")
 
 (define (string-join strings)
   (foldr (lambda (x s) (string-append x "\n" s))
@@ -16,7 +16,7 @@
         '()
         (cons x (loop)))))
 
-(define compile (compose object-code expand))
+(define compile (compose object-code js-rename expand))
 
 (define (compile-file filename)
   (string-join
