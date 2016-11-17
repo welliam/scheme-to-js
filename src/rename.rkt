@@ -4,7 +4,7 @@
 
 (define special-char-table
   '((#\. . dot)
-    (#\? . q)
+    (#\? . p)
     (#\! . bang)
     (#\@ . at)
     (#\# . hash)
@@ -30,10 +30,19 @@
     => (lambda (search) (format "~A" (cdr search))))
    (else "")))
 
-(define (js-rename sym)
+(define (js-rename-symbol sym)
   (define s
     (apply string-append
            (for/list ((c (symbol->string sym)))
              (js-rename-char c))))
   (string->symbol
    (if (zero? (string-length s)) "_" s)))
+
+(define (js-rename x (allowed '(field-ref field-set! make-object)))
+  (cond
+   ((and (symbol? x) (not (memq x allowed)))
+    (js-rename-symbol x))
+   ((pair? x)
+    (cons (js-rename (car x))
+          (js-rename (cdr x))))
+   (else x)))
