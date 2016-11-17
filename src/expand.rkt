@@ -28,7 +28,7 @@
   (((list 'if pred then))
    (if-expansion pred then))
   (((list op lhs rhs))
-   #:when (memq op (map car operators))
+   #:when (assq op operators)
    (operator-expansion op lhs rhs))
   (((list* 'lambda args body body*))
    #:when (not (null? body*))
