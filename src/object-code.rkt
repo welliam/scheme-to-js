@@ -26,7 +26,7 @@
           (object-code field)))
 
 (define (format-field-set! of field to)
-  (format "~A[~A] = ~A;"
+  (format "~A[~A] = ~A"
           (object-code of)
           (object-code field)
           (object-code to)))

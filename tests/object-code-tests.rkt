@@ -53,10 +53,10 @@
 
 (define-test-suite object-fields
   (check-equal? (object-code '(field-set! f "hello" 0))
-                "f[\"hello\"] = 0;"
+                "f[\"hello\"] = 0"
                 "Field assignment.")
   (check-equal? (object-code '(field-set! (lambda (x) x) -1 (foo bar)))
-                "(function (x) { return x; })[-1] = foo(bar);"
+                "(function (x) { return x; })[-1] = foo(bar)"
                 "Field assignment.")
   (check-equal? (object-code '(field-ref foo bar))
                 "foo[bar]"
