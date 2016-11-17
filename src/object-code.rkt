@@ -46,11 +46,6 @@
           (object-code then)
           (object-code else)))
 
-(define (format-begin forms)
-  (apply string-append
-         (map (lambda (f) (string-append (object-code f) "\n"))
-              forms)))
-
 (define/match (object-code x)
   (((list 'lambda args body))
    (format-function args body))
@@ -65,8 +60,6 @@
   (((list 'operator operator lhs rhs))
    (format-operator operator lhs rhs))
   (((list 'make-object)) "{}")
-  (((list* 'begin form forms))
-   (format-begin (cons form forms)))
   (((list* op args))
    (format-application op args))
   ((x) (format-self-evaluating x)))
