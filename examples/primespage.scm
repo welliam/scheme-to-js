@@ -6,7 +6,7 @@
 (define (set-on-click! elem f)
   (field-set! elem "onclick" f))
 
-(define (to-string i)
+(define (->string i)
   (operator "+" "" i))
 
 (define (string-append a b)
@@ -15,7 +15,7 @@
 (define (generate-output t)
   (if (null? t)
       ""
-      (string-append (to-string (car t))
+      (string-append (->string (car t))
         (string-append "\n"
           (generate-output (cdr t))))))
 
