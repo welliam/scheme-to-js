@@ -7,10 +7,10 @@
    (make-object)))
 
 (define (car p)
-  (field-ref ? "car"))
+  (field-ref p "car"))
 
 (define (cdr p)
-  (field-ref ? "cdr"))
+  (field-ref p "cdr"))
 
 (define (eq? a b)
   (operator "==" a b))
