@@ -38,7 +38,7 @@
   (string->symbol
    (if (zero? (string-length s)) "_" s)))
 
-(define (js-rename x (allowed '(field-ref field-set! make-object)))
+(define (js-rename x (allowed '(field-ref field-set! make-object set!)))
   (cond
    ((and (symbol? x) (not (memq x allowed)))
     (js-rename-symbol x))
