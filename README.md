@@ -1,6 +1,12 @@
 # scheme->javascript
 
-A Scheme to JavaScript compiler. Loosely interprets Scheme; a full compiler prelude is needed.
+A Scheme to JavaScript compiler.
+
+Currently, a Scheme with some key JavaScript features is
+implemented. Through use of these features full Scheme features like
+cons, vectors, hash tables, etc. are able to be defined. This is
+partially done in
+[examples/prelude.scm](https://github.com/welliam/scheme-to-js/blob/master/examples/prelude.scm)
 
 ## Examples
 A simple webpage which generates prime numbers is available on GitHub
