@@ -10,7 +10,8 @@
   single-arm-if
   compound-expansions
   begins
-  conds)
+  conds
+  lets)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -104,3 +105,25 @@
                         (f x)
                         quux))
                   e)))
+
+(define-test-suite lets
+  (check-equal? (expand '(let () 0))
+                '((lambda () 0)))
+  (check-equal? (expand '(let ((x 0)) x))
+                '((lambda (x) x) 0))
+  (check-equal? (expand '(let ((k v) (kk vv)) (+ k kk)))
+                '((lambda (k kk) (+ k kk))
+                  v vv))
+  (check-equal? (expand '(let () a b c))
+                '((lambda ()
+                    ((lambda (x)
+                       ((lambda (x) c)
+                        b))
+                     a))))
+  (check-equal? (expand '(let ((k v) (kk vv)) a b c))
+                '((lambda (k kk)
+                    ((lambda (x)
+                       ((lambda (x) c)
+                        b))
+                     a))
+                  v vv)))

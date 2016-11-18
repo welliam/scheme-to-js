@@ -48,6 +48,11 @@
                (begin ,then . ,thens)
                ,(cond-expansion forms)))))))
 
+(define (let-expansion key-values bodies)
+  (define keys (map car key-values))
+  (define values (map cadr key-values))
+  (expand `((lambda ,keys . ,bodies) . ,values)))
+
 (define/match (expand form)
   (((list* 'define (cons op args) body body*))
    (function-define-expansion op args (cons body body*)))
@@ -64,6 +69,8 @@
   (((list* 'cond cond-forms))
    #:when (not (null? cond-forms))
    (cond-expansion cond-forms))
+  (((list* 'let (list* key-values) bodies))
+   (let-expansion key-values bodies))
   (((cons f args))
    (cons (expand f) (expand args)))
   ((x) x))
