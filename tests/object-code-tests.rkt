@@ -8,7 +8,8 @@
   procedures
   variables
   object-fields
-  ternary-operator)
+  ternary-operator
+  set!s)
 
 (define-test-suite simple-objects
   (check-equal? (object-code 3) "3" "Basic number compilation.")
@@ -78,3 +79,9 @@
                 "(a ? b : c)")
   (check-equal? (object-code '(if (if a b c) (if d e f) (if g h i)))
                 "((a ? b : c) ? (d ? e : f) : (g ? h : i))"))
+
+(define-test-suite set!s
+  (check-equal? (object-code '(set! x y))
+                "(x = y)")
+  (check-equal? (object-code '(set! foo (f 2 (g 5 6))))
+                "(foo = f(2, g(5, 6)))"))

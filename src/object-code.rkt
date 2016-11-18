@@ -16,6 +16,8 @@
   (((list 'operator operator lhs rhs))
    (format-operator operator lhs rhs))
   (((list 'make-object)) "{}")
+  (((list 'set! op exp))
+   (format-set! op exp))
   (((list* op args))
    (format-application op args))
   ((x) (format-self-evaluating x)))
@@ -66,3 +68,8 @@
           (object-code pred)
           (object-code then)
           (object-code else)))
+
+(define (format-set! op exp)
+  (format "(~A = ~A)"
+          (object-code op)
+          (object-code exp)))
