@@ -12,7 +12,7 @@
     (#\^ . caret)
     (#\& . and)
     (#\* . star)
-    (#\- . minus)
+    (#\- . _)
     (#\+ . plus)
     (#\= . eq)
     (#\/ . fslash)
