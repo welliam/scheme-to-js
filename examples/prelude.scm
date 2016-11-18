@@ -1,10 +1,9 @@
 (define (cons a b)
-  ((lambda (o)
-     (field-set! o "type" "pair")
-     (field-set! o "car" a)
-     (field-set! o "cdr" b)
-     o)
-   (make-object)))
+  (let ((o (make-object)))
+    (field-set! o "type" "pair")
+    (field-set! o "car" a)
+    (field-set! o "cdr" b)
+    o))
 
 (define (car p)
   (field-ref p "car"))
@@ -15,8 +14,8 @@
 (define (eq? a b)
   (operator "==" a b))
 
-(define (istype? x type)
-  (and (operator "in" "type" x)
+(define (istype? o type)
+  (and (operator "in" "type" (Object o))
        (eq? (field-ref o "type")
             type)))
 
@@ -100,6 +99,9 @@
 (define (zero? n)
   (= n 0))
 
+(define (sqrt n)
+  ((field-ref Math "sqrt") n))
+
 (define (displayln x)
   ((field-ref console "log") x))
 
@@ -113,12 +115,11 @@
   (field-set! v i x))
 
 (define (vector-fill! v x)
-  (letrec ((rec (lambda (i)
-                  (cond
-                   ((< i (vector-length v))
-                    (vector-set! v i x)
-                    (rec (+ i 1)))))))
-    (rec 0)))
+  (let loop ((i 0))
+    (cond
+     ((< i (vector-length v))
+      (vector-set! v i x)
+      (loop (+ i 1))))))
 
 (define (make-vector size init)
   (let ((v (Array size)))
@@ -126,9 +127,8 @@
     v))
 
 (define (string-append . strings)
-  (letrec ((rec (lambda (strs res)
-                  (if (null? strs)
-                      res
-                      (rec (cdr strs)
-                           (operator "+" res (car strs)))))))
-    (rec strings "")))
+  (let loop ((strs strings) (res ""))
+    (if (null? strs)
+        res
+        (loop (cdr strs)
+              (operator "+" res (car strs))))))

@@ -1,13 +1,9 @@
-(define (sqrt n)
-  ((field-ref Math "sqrt") n))
-
 (define (sieve-prime! v p)
-  (letrec ((rec (lambda (n)
-                  (cond
-                   ((< n (vector-length v))
-                    (vector-set! v n #f)
-                    (rec (+ n p)))))))
-    (rec (* p 2))))
+  (let loop ((n (* p 2)))
+    (cond
+     ((< n (vector-length v))
+      (vector-set! v n #f)
+      (loop (+ n p))))))
 
 (define (collect-primes primes i)
   ; (displayln (vector-ref primes i))
@@ -20,15 +16,14 @@
 (define (prime-sieve limit)
   (let ((is-prime? (make-vector limit #t))
         (imax (sqrt limit)))
-    (letrec ((rec (lambda (i)
-                    (cond
-                     ((> i imax)
-                      (collect-primes is-prime? i))
-                     ((vector-ref is-prime? i)
-                      (sieve-prime! is-prime? i)
-                      (cons i (rec (+ i 1))))
-                     (else
-                      (rec (+ i 1)))))))
-      (rec 2))))
+    (let loop ((i 2))
+      (cond
+       ((> i imax)
+        (collect-primes is-prime? i))
+       ((vector-ref is-prime? i)
+        (sieve-prime! is-prime? i)
+        (cons i (loop (+ i 1))))
+       (else
+        (loop (+ i 1)))))))
 
 (define generate-primes prime-sieve)
