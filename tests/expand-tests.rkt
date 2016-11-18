@@ -53,9 +53,7 @@
 (define-test-suite begins
   (check-equal? (expand '(begin 1)) 1)
   (check-equal? (expand '(begin 1 2))
-                '((lambda (x)
-                    2)
-                  1))
+                '((lambda (x) 2) 1))
   (check-equal? (expand '(begin 1 2 3))
                 '((lambda (x)
                     ((lambda (x)
@@ -73,4 +71,25 @@
   (check-equal? (expand '(cond (0 1) (2 3)))
                 '(if 0 1 (if 2 3 #f)))
   (check-equal? (expand '(cond (0 1) (2 3) (else 4)))
-                '(if 0 1 (if 2 3 4))))
+                '(if 0 1 (if 2 3 4)))
+
+  (check-equal? (expand '(cond (else 0 1)))
+                '((lambda (x) 1) 0))
+  (check-equal? (expand '(cond (0 1 2)))
+                '(if 0 ((lambda (x) 2) 1) #f))
+  (check-equal? (expand '(cond (0 1 2) (else 3 4)))
+                '(if 0 ((lambda (x) 2) 1) ((lambda (x) 4) 3)))
+  (check-equal? (expand '(cond (0 1 2) (3 4 5)))
+                '(if 0 ((lambda (x) 2) 1) (if 3 ((lambda (x) 5) 4) #f)))
+  (check-equal? (expand '(cond (0 1 2) (3 4 5) (else 6 7)))
+                '(if 0
+                     ((lambda (x) 2) 1)
+                     (if 3
+                         ((lambda (x) 5) 4)
+                         ((lambda (x) 7) 6))))
+  (check-equal? (expand '(cond (0 1 2 3) (4 5 6 7) (else 8 9 10)))
+                '(if 0
+                     ((lambda (x) ((lambda (x) 3) 2)) 1)
+                     (if 4
+                         ((lambda (x) ((lambda (x) 7) 6)) 5)
+                         ((lambda (x) ((lambda (x) 10) 9)) 8)))))
