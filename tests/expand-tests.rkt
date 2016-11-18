@@ -199,5 +199,10 @@
   (check-equal? (expand '(quote (a . b)))
                 '(cons (string->symbol "a") (string->symbol "b")))
   (check-equal? (expand '(quote (1 2 3)))
-                '(cons 1 (cons 2 (cons 3 (list))))))
-
+                '(cons 1 (cons 2 (cons 3 (list)))))
+  (check-equal? (expand '(quote #(1 a (3 b))))
+                '(vector 1
+                         (string->symbol "a")
+                         (cons 3
+                               (cons (string->symbol "b")
+                                     (list))))))

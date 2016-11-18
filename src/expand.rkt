@@ -96,6 +96,8 @@
    ((pair? form)
     `(cons ,(quote-expansion (car form))
            ,(quote-expansion (cdr form))))
+   ((vector? form)
+    `(vector . ,(map quote-expansion (vector->list form))))
    (else form)))
 
 (define/match (expand form)
