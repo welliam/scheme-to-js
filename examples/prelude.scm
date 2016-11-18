@@ -44,35 +44,8 @@
       0
       (+ 1 (length (cdr t)))))
 
-(define emptyqueue (cons null null))
-
-(define (queue-empty? q)
-  (and (null? (car q))
-       (null? (cdr q))))
-
-(define (enqueue x q)
-  (cons (cons x (car q))
-        (cdr q)))
-
-(define (dequeue q)
-  (if (null? (cdr q))
-      (dequeue (cons null (reverse (car q))))
-      (cons (car q)
-            (cdr (cdr q)))))
-
 (define (not x)
   (if x false true))
-
-(define (queue-peek q)
-  (if (null? (cdr q))
-      (and (not (null? (car q)))
-           (queue-peek (cons null (reverse (car q)))))
-      (car (cdr q))))
-
-(define (displayln x)
-  ((field-ref console "log") x))
-
-(define exampleq (enqueue 3 (enqueue 2 (enqueue 1 emptyqueue))))
 
 (define (+ a b)
   (operator "+" a b))
@@ -94,3 +67,6 @@
 
 (define (zero? n)
   (= n 0))
+
+(define (displayln x)
+  ((field-ref console "log") x))
