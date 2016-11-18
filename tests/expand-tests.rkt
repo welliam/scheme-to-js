@@ -9,7 +9,8 @@
   operators
   single-arm-if
   compound-expansions
-  begins)
+  begins
+  conds)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -33,7 +34,7 @@
                     foo)))
   (check-equal? (expand '(define (f) 1 2))
                 '(define f
-                   (lambda () 
+                   (lambda ()
                      ((lambda (x)
                         2)
                       1)))))
@@ -61,3 +62,15 @@
                        3)
                      2))
                   1)))
+
+(define-test-suite conds
+  (check-equal? (expand '(cond (else 0)))
+                0)
+  (check-equal? (expand '(cond (0 1)))
+                '(if 0 1 #f))
+  (check-equal? (expand '(cond (0 1) (else 2)))
+                '(if 0 1 2))
+  (check-equal? (expand '(cond (0 1) (2 3)))
+                '(if 0 1 (if 2 3 #f)))
+  (check-equal? (expand '(cond (0 1) (2 3) (else 4)))
+                '(if 0 1 (if 2 3 4))))
