@@ -53,6 +53,14 @@
   (define values (map cadr key-values))
   (expand `((lambda ,keys . ,bodies) . ,values)))
 
+(define (let*-expansion key-values bodies)
+  (match key-values
+    ('() (expand `(let () . ,bodies)))
+    ((list* (list k v) key-values)
+     (expand
+      `(let ((,k ,v))
+         ,(let*-expansion key-values bodies))))))
+
 (define/match (expand form)
   (((list* 'define (cons op args) body body*))
    (function-define-expansion op args (cons body body*)))
@@ -71,6 +79,8 @@
    (cond-expansion cond-forms))
   (((list* 'let (list* key-values) bodies))
    (let-expansion key-values bodies))
+  (((list* 'let* (list* key-values) bodies))
+   (let*-expansion key-values bodies))
   (((cons f args))
    (cons (expand f) (expand args)))
   ((x) x))

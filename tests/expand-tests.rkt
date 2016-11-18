@@ -11,7 +11,8 @@
   compound-expansions
   begins
   conds
-  lets)
+  lets
+  let*s)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -127,3 +128,17 @@
                         b))
                      a))
                   v vv)))
+
+(define-test-suite let*s
+  (check-equal? (expand '(let* () 0))
+                '((lambda () 0)))
+  (check-equal? (expand '(let* ((x 0)) x))
+                '((lambda (x)
+                    ((lambda () x)))
+                  0))
+  (check-equal? (expand '(let* ((x 0) (y (+ x 1))) (+ x y)))
+                '((lambda (x)
+                    ((lambda (y)
+                       ((lambda () (+ x y))))
+                     (+ x 1)))
+                  0)))
