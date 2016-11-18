@@ -12,7 +12,8 @@
   begins
   conds
   lets
-  let*s)
+  let*s
+  letrecs)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -142,3 +143,21 @@
                        ((lambda () (+ x y))))
                      (+ x 1)))
                   0)))
+
+(define-test-suite letrecs
+  (check-equal? (expand '(letrec () 0))
+                '((lambda () 0)))
+  (check-equal? (expand '(letrec ((a 0)) a))
+                '((lambda (a)
+                    ((lambda (x)
+                       a)
+                     (set! a 0)))
+                  #f))
+  (check-equal? (expand '(letrec ((a 1) (b 2)) (+ a b)))
+                '((lambda (a b)
+                    ((lambda (x)
+                       ((lambda (x)
+                          (+ a b))
+                        (set! b 2)))
+                     (set! a 1)))
+                  #f #f)))
