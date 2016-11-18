@@ -70,6 +70,19 @@
   (define let-body (append set!s bodies))
   (expand `(let ,let-keys . ,let-body)))
 
+(define (separate-cars improper)
+  (let loop ((t improper) (res '()))
+    (if (pair? t)
+        (loop (cdr t) (cons (car t) res))
+        (values (reverse res) t))))
+
+(define (polyadic-expansion args body)
+  (define-values (proper-args rest-arg) (separate-cars args))
+  (expand
+   `(lambda ,proper-args
+      (let ((,rest-arg (get-rest-arguments arguments ,(length proper-args))))
+        ,body))))
+
 (define/match (expand form)
   (((list* 'define (cons op args) body body*))
    (function-define-expansion op args (cons body body*)))
@@ -80,7 +93,10 @@
    (operator-expansion op lhs rhs))
   (((list* 'lambda args body body*))
    #:when (not (null? body*))
-   `(lambda ,args ,(expand `(begin ,body . ,body*))))
+   (expand `(lambda ,args (begin ,body . ,body*))))
+  (((list 'lambda args body))
+   #:when (if (pair? args) (not (list? args)) (symbol? args))
+   (polyadic-expansion args body))
   (((list* 'begin expr exprs))
    (begin-expansion expr exprs))
   (((list* 'cond cond-forms))

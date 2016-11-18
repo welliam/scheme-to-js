@@ -13,7 +13,8 @@
   conds
   lets
   let*s
-  letrecs)
+  letrecs
+  polyadic)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -24,8 +25,7 @@
 (define-test-suite defun
   (check-equal? (expand '(define (f) x)) '(define f (lambda () x)))
   (check-equal? (expand '(define (f x) x)) '(define f (lambda (x) x)))
-  (check-equal? (expand '(define (f x y) x)) '(define f (lambda (x y) x)))
-  (check-equal? (expand '(define (f . foo) x)) '(define f (lambda foo x))))
+  (check-equal? (expand '(define (f x y) x)) '(define f (lambda (x y) x))))
 
 (define-test-suite implicit-begin
   (check-equal? (expand '(lambda (foo) foo foo foo))
@@ -161,3 +161,22 @@
                         (set! b 2)))
                      (set! a 1)))
                   #f #f)))
+
+(define-test-suite polyadic
+  (check-equal? (expand '(lambda xs xs))
+                '(lambda ()
+                   ((lambda (xs)
+                      xs)
+                    (array_to_list
+                     ((field-ref arguments "slice")
+                      0
+                      (field-ref arguments "length"))))))
+  (check-equal? (expand '(define (list . xs) xs))
+                '(define list
+                   (lambda ()
+                     ((lambda (xs)
+                        xs)
+                      (array_to_list
+                       ((field-ref arguments "slice")
+                        0
+                        (field-ref arguments "length"))))))))

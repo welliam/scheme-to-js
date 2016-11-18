@@ -44,6 +44,15 @@
       0
       (+ 1 (length (cdr t)))))
 
+(define (get-rest-arguments a i)
+  ;; convert a javascript object with number slots and a length attr to a list
+  ;; used in expand.scm
+  (if (= i (field-ref a "length"))
+      null
+      (cons (field-ref a i) (get-rest-arguments a (+ i 1)))))
+
+(define (list . xs) xs)
+
 (define (not x)
   (if x false true))
 
