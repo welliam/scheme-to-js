@@ -3,8 +3,14 @@
 (provide js-rename)
 
 (define special-char-table
-  '((#px"\\." . "dot")
+  '((#px"^->$" . "arrow")
+    (#px"^->" . "to_")
+    (#px"->$" . "_arrow")
+    (#px"->" . "_to_")
+    (#px"\\." . "dot")
     (#px"\\?" . "p")
+    (#px"^!$" . "bang")
+    (#px"!$" . "_bang")
     (#px"!" . "bang")
     (#px"@" . "at")
     (#px"#" . "hash")
@@ -22,7 +28,7 @@
 
 (define (js-rename-symbol sym)
   (string->symbol
-   (foldr (match-lambda*
+   (foldl (match-lambda*
            ((list (cons from to) res)
             (regexp-replace* from res to)))
           (symbol->string sym)
