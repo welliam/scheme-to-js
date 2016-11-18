@@ -51,3 +51,4 @@ Some examples:
 has more successfully-compiling examples.
 
 ## See [the issues](https://github.com/welliam/scheme-to-js/issues) for some bugs/missing features/quirks/etc.
+Currently the issues page is more like a development journal/to-do list.
