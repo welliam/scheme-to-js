@@ -56,6 +56,17 @@
 (define (not x)
   (if x false true))
 
+(define (for-each f t)
+  (cond
+   ((not (null? t))
+    (f (car t))
+    (for-each f (cdr t)))))
+
+(define (map f t)
+  (if (null? t)
+      null
+      (cons (f (car t)) (map f (cdr t)))))
+
 (define (+ a b)
   (operator "+" a b))
 
@@ -74,8 +85,42 @@
 (define (= a b)
   (operator "==" a b))
 
+(define (< a b)
+  (operator "<" a b))
+
+(define (> a b)
+  (operator ">" a b))
+
+(define (<= a b)
+  (operator "<=" a b))
+
+(define (>= a b)
+  (operator ">=" a b))
+
 (define (zero? n)
   (= n 0))
 
 (define (displayln x)
   ((field-ref console "log") x))
+
+(define (vector-length v)
+  (field-ref v "length"))
+
+(define (vector-ref v i)
+  (field-ref v i))
+
+(define (vector-set! v i x)
+  (field-set! v i x))
+
+(define (vector-fill! v x)
+  (letrec ((rec (lambda (i)
+                  (cond
+                   ((< i (vector-length v))
+                    (vector-set! v i x)
+                    (rec (+ i 1)))))))
+    (rec 0)))
+
+(define (make-vector size init)
+  (let ((v (Array size)))
+    (vector-fill! v init)
+    v))
