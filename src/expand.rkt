@@ -16,11 +16,11 @@
   `(if ,(expand a) ,(expand b) #f))
 
 (define (begin-expansion expr exprs)
-  (if (null? exprs)
-      (expand expr)
-      `((lambda (x)
-          ,(begin-expansion (car exprs) (cdr exprs)))
-        ,(expand expr))))
+  (expand
+   (if (null? exprs)
+       expr
+       `(let ((x ,expr))
+          ,(begin-expansion (car exprs) (cdr exprs))))))
 
 (define (cond-expansion cond-forms)
   (match-define (cons form forms) cond-forms)
@@ -32,9 +32,9 @@
     ((list exp '=> then-f)
      (expand
       (if (null? forms)
-          `((lambda (x) (if x (,then-f x))) ,exp)
-          `((lambda (x) (if x (,then-f x) ,(cond-expansion forms)))
-            ,exp))))
+          `(let ((x ,exp)) (if x (,then-f x)))
+          `(let ((x ,exp))
+             (if x (,then-f x) ,(cond-expansion forms))))))
     ((list pred then)
      (expand
       (if (null? forms)
