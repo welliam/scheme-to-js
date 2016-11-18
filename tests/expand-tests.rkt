@@ -192,4 +192,7 @@
 
 (define-test-suite quotes
   (check-equal? (expand '(quote x))
-                '(string->symbol "x")))
+                '(string->symbol "x"))
+  (check-equal? (expand '(quote "hello")) "hello")
+  (check-equal? (expand '(quote 1)) 1)
+  (check-equal? (expand '(quote ())) '(list)))

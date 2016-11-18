@@ -89,7 +89,11 @@
       (,name . ,(map second kvs)))))
 
 (define (quote-expansion form)
-  `(string->symbol ,(symbol->string form)))
+  (cond
+   ((null? form) '(list))
+   ((symbol? form)
+    `(string->symbol ,(symbol->string form)))
+   (else form)))
 
 (define/match (expand form)
   (((list 'quote exp))
