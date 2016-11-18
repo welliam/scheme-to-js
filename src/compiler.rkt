@@ -21,3 +21,8 @@
 (define (compile-file filename)
   (string-join
    (map compile (with-input-from-file filename read-all))))
+
+(match (vector->list (current-command-line-arguments))
+  ('() (displayln "feed me schemes"))
+  ((list* files)
+   (for-each (compose display compile-file) files)))
