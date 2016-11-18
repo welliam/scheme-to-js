@@ -72,7 +72,6 @@
                 '(if 0 1 (if 2 3 #f)))
   (check-equal? (expand '(cond (0 1) (2 3) (else 4)))
                 '(if 0 1 (if 2 3 4)))
-
   (check-equal? (expand '(cond (else 0 1)))
                 '((lambda (x) 1) 0))
   (check-equal? (expand '(cond (0 1 2)))
