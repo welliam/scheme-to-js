@@ -8,7 +8,8 @@
   implicit-begin
   operators
   single-arm-if
-  compound-expansions)
+  compound-expansions
+  begins)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -49,14 +50,14 @@
                 '(f (if 1 2 #f) (if 1 2 #f))))
 
 (define-test-suite begins
-  (check-equal? '(begin 1) 1)
-  (check-equal? '(begin 1 2)
+  (check-equal? (expand '(begin 1)) 1)
+  (check-equal? (expand '(begin 1 2))
                 '((lambda (x)
                     2)
                   1))
-  (check-equal? '(begin 1 2 3)
+  (check-equal? (expand '(begin 1 2 3))
                 '((lambda (x)
                     ((lambda (x)
                        3)
-                     2)
-                  1))))
+                     2))
+                  1)))
