@@ -124,3 +124,11 @@
   (let ((v (Array size)))
     (vector-fill! v init)
     v))
+
+(define (string-append . strings)
+  (letrec ((rec (lambda (strs res)
+                  (if (null? strs)
+                      res
+                      (rec (cdr strs)
+                           (operator "+" res (car strs)))))))
+    (rec strings "")))

@@ -9,9 +9,6 @@
 (define (->string i)
   (operator "+" "" i))
 
-(define (string-append a b)
-  (operator "+" a b))
-
 (define (generate-output t)
   (cond
    ((null? t) "")
@@ -19,8 +16,8 @@
     (car t))
    (else
     (string-append (->string (car t))
-      (string-append ", "
-        (generate-output (cdr t)))))))
+                   ", "
+                   (generate-output (cdr t))))))
 
 (define (run)
   (field-set! (by-id "o")
