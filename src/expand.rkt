@@ -83,6 +83,11 @@
       (let ((,rest-arg (get-rest-arguments arguments ,(length proper-args))))
         ,body))))
 
+(define (named-let-expansion name kvs bodies)
+  (expand
+   `(letrec ((,name (lambda ,(map car kvs) . ,bodies)))
+      (,name . ,(map second kvs)))))
+
 (define/match (expand form)
   (((list* 'define (cons op args) body body*))
    (function-define-expansion op args (cons body body*)))
@@ -102,6 +107,9 @@
   (((list* 'cond cond-forms))
    #:when (not (null? cond-forms))
    (cond-expansion cond-forms))
+  (((list* 'let name (list* key-values) bodies))
+   #:when (symbol? name)
+   (named-let-expansion name key-values bodies))
   (((list* 'let (list* key-values) bodies))
    (let-expansion key-values bodies))
   (((list* 'let* (list* key-values) bodies))

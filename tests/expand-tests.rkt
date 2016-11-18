@@ -14,6 +14,7 @@
   lets
   let*s
   letrecs
+  named-let
   polyadic)
 
 (define-test-suite fix-points
@@ -162,21 +163,28 @@
                      (set! a 1)))
                   #f #f)))
 
+(define-test-suite named-let
+  (check-equal? (expand '(let loop () 0))
+                '((lambda (loop)
+                    ((lambda (x)
+                       (loop))
+                     (set! loop (lambda () 0))))
+                  #f))
+  (check-equal? (expand '(let loop ((quux 1)) quux))
+                '((lambda (loop)
+                    ((lambda (x)
+                       (loop 1))
+                     (set! loop (lambda (quux) quux))))
+                  #f)))
+
 (define-test-suite polyadic
   (check-equal? (expand '(lambda xs xs))
                 '(lambda ()
-                   ((lambda (xs)
-                      xs)
-                    (array_to_list
-                     ((field-ref arguments "slice")
-                      0
-                      (field-ref arguments "length"))))))
+                   ((lambda (xs) xs)
+                    (get-rest-arguments arguments 0))))
   (check-equal? (expand '(define (list . xs) xs))
                 '(define list
                    (lambda ()
                      ((lambda (xs)
                         xs)
-                      (array_to_list
-                       ((field-ref arguments "slice")
-                        0
-                        (field-ref arguments "length"))))))))
+                      (get-rest-arguments arguments 0))))))
