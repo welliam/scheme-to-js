@@ -46,6 +46,10 @@
 
 (define emptyqueue (cons null null))
 
+(define (queue-empty? q)
+  (and (null? (car q))
+       (null? (cdr q))))
+
 (define (enqueue x q)
   (cons (cons x (car q))
         (cdr q)))
@@ -59,10 +63,10 @@
 (define (not x)
   (if x false true))
 
-(define (queuepeek q)
+(define (queue-peek q)
   (if (null? (cdr q))
       (and (not (null? (car q)))
-           (queuepeek (cons null (reverse (car q)))))
+           (queue-peek (cons null (reverse (car q)))))
       (car (cdr q))))
 
 (define (displayln x)
