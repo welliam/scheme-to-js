@@ -13,11 +13,14 @@
   (operator "+" a b))
 
 (define (generate-output t)
-  (if (null? t)
-      ""
-      (string-append (->string (car t))
-        (string-append "\n"
-          (generate-output (cdr t))))))
+  (cond
+   ((null? t) "")
+   ((null? (cdr t))
+    (car t))
+   (else
+    (string-append (->string (car t))
+      (string-append ", "
+        (generate-output (cdr t)))))))
 
 (define (run)
   (field-set! (by-id "o")
