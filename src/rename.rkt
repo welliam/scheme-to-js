@@ -3,40 +3,30 @@
 (provide js-rename)
 
 (define special-char-table
-  '((#\. . dot)
-    (#\? . p)
-    (#\! . bang)
-    (#\@ . at)
-    (#\# . hash)
-    (#\% . percent)
-    (#\^ . caret)
-    (#\& . and)
-    (#\* . star)
-    (#\- . _)
-    (#\+ . plus)
-    (#\= . eq)
-    (#\/ . fslash)
-    (#\~ . tilde)
-    (#\< . lt)
-    (#\> . gt)))
-
-(define valid-js-char?
-  (disjoin char-alphabetic? char-numeric? (curryr memq '(#\_ #\$))))
-
-(define (js-rename-char c)
-  (cond
-   ((valid-js-char? c) (string c))
-   ((assq c special-char-table)
-    => (compose (curry format "~A") cdr))
-   (else "")))
+  '((#px"\\." . "dot")
+    (#px"\\?" . "p")
+    (#px"!" . "bang")
+    (#px"@" . "at")
+    (#px"#" . "hash")
+    (#px"%" . "percent")
+    (#px"\\^" . "caret")
+    (#px"&" . "and")
+    (#px"\\*" . "star")
+    (#px"-" . "_")
+    (#px"\\+" . "plus")
+    (#px"=" . "eq")
+    (#px"/" . "fslash")
+    (#px"~" . "tilde")
+    (#px"<" . "lt")
+    (#px">" . "gt")))
 
 (define (js-rename-symbol sym)
-  (define s
-    (apply string-append
-           (for/list ((c (symbol->string sym)))
-             (js-rename-char c))))
   (string->symbol
-   (if (zero? (string-length s)) "_" s)))
+   (foldr (match-lambda*
+           ((list (cons from to) res)
+            (regexp-replace* from res to)))
+          (symbol->string sym)
+          special-char-table)))
 
 (define (js-rename x (allowed '(field-ref field-set! make-object set!)))
   (cond
