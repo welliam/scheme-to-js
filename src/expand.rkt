@@ -93,6 +93,9 @@
    ((null? form) '(list))
    ((symbol? form)
     `(string->symbol ,(symbol->string form)))
+   ((pair? form)
+    `(cons ,(quote-expansion (car form))
+           ,(quote-expansion (cdr form))))
    (else form)))
 
 (define/match (expand form)

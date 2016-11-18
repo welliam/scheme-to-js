@@ -195,4 +195,9 @@
                 '(string->symbol "x"))
   (check-equal? (expand '(quote "hello")) "hello")
   (check-equal? (expand '(quote 1)) 1)
-  (check-equal? (expand '(quote ())) '(list)))
+  (check-equal? (expand '(quote ())) '(list))
+  (check-equal? (expand '(quote (a . b)))
+                '(cons (string->symbol "a") (string->symbol "b")))
+  (check-equal? (expand '(quote (1 2 3)))
+                '(cons 1 (cons 2 (cons 3 (list))))))
+
