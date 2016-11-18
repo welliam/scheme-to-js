@@ -27,7 +27,7 @@
   (cond
    ((valid-js-char? c) (string c))
    ((assq c special-char-table)
-    => (lambda (search) (format "~A" (cdr search))))
+    => (compose (curry format "~A") cdr))
    (else "")))
 
 (define (js-rename-symbol sym)
