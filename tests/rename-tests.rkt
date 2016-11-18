@@ -20,7 +20,8 @@
   (check-not-false (renamed? (js-rename 'eq?)))
   (check-not-false (renamed? (js-rename 'call/cc)))
   (check-not-false (renamed? (js-rename 'foobar)))
-  (check-not-false (renamed? (js-rename '_@!#*????))))
+  (check-not-false (renamed? (js-rename '_@!#*????)))
+  (check-not-false (renamed? (js-rename '?!.@#%^&*-+=/~<>))))
 
 (define-test-suite fixpoints
   (check-equal? 1 (js-rename 1))
