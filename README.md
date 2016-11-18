@@ -34,13 +34,14 @@ var cdr = (function (p) { return p["cdr"]; });
 var eqp = (function (a, b) { return (a == b); });
 ```
 
-Some [examples](https://github.com/welliam/scheme-to-js/tree/master/examples):
+Some examples:
 
 - [Core Scheme functions](https://github.com/welliam/scheme-to-js/blob/master/examples/prelude.scm)
 - [Factorial](https://github.com/welliam/scheme-to-js/blob/master/examples/fac.scm)
 - [Prime generation](https://github.com/welliam/scheme-to-js/blob/master/examples/primes.scm)
 - [A webpage](https://github.com/welliam/scheme-to-js/blob/master/examples/primespage.scm) ([accompanying HTML](https://github.com/welliam/scheme-to-js/blob/master/examples/primes.html))
 
-for more successfully-compiling examples of this Scheme.
+[This directory](https://github.com/welliam/scheme-to-js/tree/master/examples)
+has more successfully-compiling examples.
 
 ## See [the issues](https://github.com/welliam/scheme-to-js/issues) for some bugs/missing features/quirks/etc.
