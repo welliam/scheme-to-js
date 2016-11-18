@@ -88,7 +88,12 @@
    `(letrec ((,name (lambda ,(map car kvs) . ,bodies)))
       (,name . ,(map second kvs)))))
 
+(define (quote-expansion form)
+  `(string->symbol ,(symbol->string form)))
+
 (define/match (expand form)
+  (((list 'quote exp))
+   (quote-expansion exp))
   (((list* 'define (cons op args) body body*))
    (function-define-expansion op args (cons body body*)))
   (((list 'if pred then))

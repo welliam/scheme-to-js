@@ -15,7 +15,8 @@
   let*s
   letrecs
   named-let
-  polyadic)
+  polyadic
+  quotes)
 
 (define-test-suite fix-points
   (check-equal? (expand 'x) 'x)
@@ -188,3 +189,7 @@
                      ((lambda (xs)
                         xs)
                       (get-rest-arguments arguments 0))))))
+
+(define-test-suite quotes
+  (check-equal? (expand '(quote x))
+                '(string->symbol "x")))
