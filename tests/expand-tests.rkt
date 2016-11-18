@@ -91,4 +91,16 @@
                      ((lambda (x) ((lambda (x) 3) 2)) 1)
                      (if 4
                          ((lambda (x) ((lambda (x) 7) 6)) 5)
-                         ((lambda (x) ((lambda (x) 10) 9)) 8)))))
+                         ((lambda (x) ((lambda (x) 10) 9)) 8))))
+  (check-equal? (expand '(cond (e => f)))
+                '((lambda (x)
+                    (if x
+                        (f x)
+                        #f))
+                  e))
+  (check-equal? (expand '(cond (e => f) (else quux)))
+                '((lambda (x)
+                    (if x
+                        (f x)
+                        quux))
+                  e)))

@@ -29,16 +29,24 @@
      (expand body))
     ((list* 'else body bodies)
      (expand `(begin ,body . ,bodies)))
+    ((list exp '=> then-f)
+     (expand
+      (if (null? forms)
+          `((lambda (x) (if x (,then-f x))) ,exp)
+          `((lambda (x) (if x (,then-f x) ,(cond-expansion forms)))
+            ,exp))))
     ((list pred then)
-     (if (null? forms)
-         (expand `(if ,pred ,then))
-         (expand `(if ,pred ,then ,(cond-expansion forms)))))
+     (expand
+      (if (null? forms)
+          `(if ,pred ,then)
+          `(if ,pred ,then ,(cond-expansion forms)))))
     ((list* pred then thens)
-     (if (null? forms)
-         (expand `(if ,pred (begin ,then . ,thens)))
-         (expand `(if ,pred
-                      (begin ,then . ,thens)
-                      ,(cond-expansion forms)))))))
+     (expand
+      (if (null? forms)
+          `(if ,pred (begin ,then . ,thens))
+          `(if ,pred
+               (begin ,then . ,thens)
+               ,(cond-expansion forms)))))))
 
 (define/match (expand form)
   (((list* 'define (cons op args) body body*))
