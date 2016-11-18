@@ -59,10 +59,9 @@
 
 (define (format-self-evaluating x)
   (cond
-   ((not (boolean? x))
-    (format "~S" x))
-   (x "true")
-   (else "false")))
+   ((boolean? x)
+    (if x "true" "false"))
+   (else (format "~S" x))))
 
 (define (format-definition id exp)
   (format "var ~S = ~A;" id (object-code exp)))
