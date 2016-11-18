@@ -90,8 +90,3 @@
 
 (define (zero? n)
   (= n 0))
-
-(define (ormap f t)
-  (and (not (null? t))
-       (or (f (car t))
-           (ormap f (cdr t)))))
