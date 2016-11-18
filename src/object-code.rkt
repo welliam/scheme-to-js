@@ -58,7 +58,11 @@
           (object-code rhs)))
 
 (define (format-self-evaluating x)
-  (format "~S" x))
+  (cond
+   ((not (boolean? x))
+    (format "~S" x))
+   (x "true")
+   (else "false")))
 
 (define (format-definition id exp)
   (format "var ~S = ~A;" id (object-code exp)))

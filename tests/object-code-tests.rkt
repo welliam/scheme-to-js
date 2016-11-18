@@ -15,7 +15,9 @@
   (check-equal? (object-code 3) "3" "Basic number compilation.")
   (check-equal? (object-code "hello") "\"hello\"" "Basic string compilation.")
   (check-equal? (object-code 'x) "x" "Symbol compilation.")
-  (check-equal? (object-code '(make-object)) "{}" "Object creation."))
+  (check-equal? (object-code '(make-object)) "{}" "Object creation.")
+  (check-equal? (object-code #f) "false" "False")
+  (check-equal? (object-code #t) "true" "False"))
 
 (define-test-suite applications
   (check-equal? (object-code '(foo)) "foo()" "Basic function application.")
