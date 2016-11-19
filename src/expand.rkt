@@ -84,7 +84,7 @@
 (define (named-let-expansion name kvs bodies)
   (expand
    `(letrec ((,name (lambda ,(map car kvs) . ,bodies)))
-      (,name . ,(map second kvs)))))
+      (,name . ,(map cadr kvs)))))
 
 (define (quote-expansion form)
   (cond
