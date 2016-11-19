@@ -15,12 +15,11 @@ A simple webpage which generates prime numbers is available on GitHub
 Input:
 ```scheme
 (define (cons a b)
-  ((lambda (o)
-     (field-set! o "type" "pair")
-     (field-set! o "car" a)
-     (field-set! o "cdr" b)
-     o)
-   (make-object)))
+  (let ((o (make-object)))
+    (field-set! o "type" "pair")
+    (field-set! o "car" a)
+    (field-set! o "cdr" b)
+    o))
 
 (define (car p)
   (field-ref p "car"))
@@ -34,7 +33,7 @@ Input:
 
 Output
 ```javascript
-var cons = (function (a, b) { return (function (o) { return (function (x) { return (function (x) { return (function (x) { return o; })(o["cdr"] = b); })(o["car"] = a); })(o["type"] = "pair"); })({}); });
+var cons = (function (a, b) { return (function (o) { return (function (x) { return (function (x) { return (function (x) { return o; })(o["cdr"] = b); })(o["car"] = a); })(o["type"] = "pair"); })({}); }); 
 var car = (function (p) { return p["car"]; });
 var cdr = (function (p) { return p["cdr"]; });
 var eqp = (function (a, b) { return (a == b); });
