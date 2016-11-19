@@ -62,9 +62,8 @@
 (define (letrec-expansion key-values bodies)
   (define keys (map car key-values))
   (define values (map cadr key-values))
-  (define let-keys (map (lambda (key) `(,key #f)) keys))
-  (define set!s (map (lambda (key value) `(set! ,key ,value))
-                     keys values))
+  (define let-keys (map (curryr list #f) keys))
+  (define set!s (map (curry list 'set!) keys values))
   (define let-body (append set!s bodies))
   (expand `(let ,let-keys . ,let-body)))
 
