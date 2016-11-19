@@ -1,9 +1,19 @@
+(define (is-type? o type)
+  (and (operator "in" "type" (Object o))
+       (eq? (field-ref o "type")
+            type)))
+
+(define (set-type! o type)
+  (field-set! o "type" type))
+
 (define (cons a b)
   (let ((o (make-object)))
-    (field-set! o "type" "pair")
+    (set-type! o "pair")
     (field-set! o "car" a)
     (field-set! o "cdr" b)
     o))
+
+(define (list . xs) xs)
 
 (define (car p)
   (field-ref p "car"))
@@ -14,16 +24,11 @@
 (define (eq? a b)
   (operator "==" a b))
 
-(define (istype? o type)
-  (and (operator "in" "type" (Object o))
-       (eq? (field-ref o "type")
-            type)))
-
 (define (pair? x)
-  (istype? x "pair"))
+  (is-type? x "pair"))
 
 (define (null? x)
-  (eq? x null))
+  (eq? x '()))
 
 (define (list? x)
   (or (null? x)
@@ -36,7 +41,7 @@
       (reverse-help (cdr t) (cons (car t) res))))
 
 (define (reverse t)
-  (reverse-help t null))
+  (reverse-help t '()))
 
 (define (length t)
   (if (null? t)
@@ -47,10 +52,8 @@
   ;; convert a javascript object with number slots and a length attr to a list
   ;; used in expand.scm
   (if (= i (field-ref a "length"))
-      null
+      null  ; dirty secret..!
       (cons (field-ref a i) (get-rest-arguments a (+ i 1)))))
-
-(define (list . xs) xs)
 
 (define (not x)
   (if x false true))
@@ -63,7 +66,7 @@
 
 (define (map f t)
   (if (null? t)
-      null
+      '()
       (cons (f (car t)) (map f (cdr t)))))
 
 (define (+ a b)
