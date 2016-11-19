@@ -52,10 +52,10 @@
   (expand `((lambda ,keys . ,bodies) . ,values)))
 
 (define (let*-expansion key-values bodies)
-  (match key-values
-    ('() (expand `(let () . ,bodies)))
-    ((list* (list k v) key-values)
-     (expand
+  (expand
+   (match key-values
+     ('() `(let () . ,bodies))
+     ((list* (list k v) key-values)
       `(let ((,k ,v))
          ,(let*-expansion key-values bodies))))))
 
