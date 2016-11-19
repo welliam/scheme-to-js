@@ -24,24 +24,22 @@
 
 (define (cond-expansion cond-forms)
   (match-define (cons form forms) cond-forms)
-  (match form
-    ((list 'else body)
-     (expand body))
-    ((list* 'else body bodies)
-     (expand `(begin ,body . ,bodies)))
-    ((list exp '=> then-f)
-     (expand
+  (expand
+   (match form
+     ((list 'else body)
+      body)
+     ((list* 'else body bodies)
+      `(begin ,body . ,bodies))
+     ((list exp '=> then-f)
       (if (null? forms)
           `(let ((x ,exp)) (if x (,then-f x)))
           `(let ((x ,exp))
-             (if x (,then-f x) ,(cond-expansion forms))))))
-    ((list pred then)
-     (expand
+             (if x (,then-f x) ,(cond-expansion forms)))))
+     ((list pred then)
       (if (null? forms)
           `(if ,pred ,then)
-          `(if ,pred ,then ,(cond-expansion forms)))))
-    ((list* pred then thens)
-     (expand
+          `(if ,pred ,then ,(cond-expansion forms))))
+     ((list* pred then thens)
       (if (null? forms)
           `(if ,pred (begin ,then . ,thens))
           `(if ,pred
