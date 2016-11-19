@@ -19,10 +19,10 @@
     <script src="output.js">
       <!--
           To generate this file, run this at the root of this repo:
-          racket -e '(require "src/compiler.rkt") (for ((f (list "examples/prelude.scm" "examples/primes.scm" "examples/primespage.scm"))) (display (compile-file f)))' > examples/output.js
+          racket src/compiler.rkt examples/prelude.scm examples/primes.scm examples/primespage.scm > examples/output.js
 
           To generate the prime sieve version of this page, run this!:
-          racket -e '(require "src/compiler.rkt") (for ((f (list "examples/prelude.scm" "examples/sieve.scm" "examples/primespage.scm"))) (display (compile-file f)))' > examples/output.js
+          racket src/compiler.rkt examples/prelude.scm examples/sieve.scm examples/primespage.scm > examples/output.js
         -->
     </script>
   </body>
