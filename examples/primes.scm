@@ -16,4 +16,4 @@
     (generate-primes-help (cons i primes) (- num-primes 1) (+ i 1)))))
 
 (define (generate-primes num)
-  (reverse (generate-primes-help null num 2)))
+  (reverse (generate-primes-help '() num 2)))
