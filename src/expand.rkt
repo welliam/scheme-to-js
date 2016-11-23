@@ -3,7 +3,7 @@
 (provide expand)
 
 (define (function-define-expansion op args bodies)
-  `(define ,op ,(expand `(lambda ,args . ,bodies))))
+  (expand `(define ,op (lambda ,args . ,bodies))))
 
 (define operators
   `((and . "&&")

@@ -27,7 +27,8 @@
 (define-test-suite defun
   (check-equal? (expand '(define (f) x)) '(define f (lambda () x)))
   (check-equal? (expand '(define (f x) x)) '(define f (lambda (x) x)))
-  (check-equal? (expand '(define (f x y) x)) '(define f (lambda (x y) x))))
+  (check-equal? (expand '(define (f x y) x)) '(define f (lambda (x y) x)))
+  (check-equal? (expand '(define ((f x) y) x)) '(define f (lambda (x) (lambda (y) x)))))
 
 (define-test-suite implicit-begin
   (check-equal? (expand '(lambda (foo) foo foo foo))
