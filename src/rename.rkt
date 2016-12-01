@@ -1,6 +1,8 @@
 #lang racket
 
-(provide js-rename)
+(provide js-rename scope-rename)
+
+;; js-rename (scheme-valid -> js-valid (with exceptions for core forms))
 
 (define special-char-table
   '((#px"^->$" . "arrow")
@@ -44,3 +46,18 @@
     (cons (js-rename (car x))
           (js-rename (cdr x))))
    (else x)))
+
+;; scope renamer (scheme-valid -> scheme-valid)
+
+(define current-rename-dictionary (make-parameter (make-hash)))
+
+(define (format-symbol dict sym)
+  (string->symbol (format "~A_~A" sym (hash-count dict))))
+
+(define (new-symbol! dict sym)
+  (define renamed (format-symbol dict sym))
+  (hash-set! dict sym renamed)
+  renamed)
+
+(define (scope-rename form (dict (current-rename-dictionary)))
+  (hash-ref dict form (lambda () (new-symbol! dict form))))
