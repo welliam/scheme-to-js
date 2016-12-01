@@ -21,6 +21,16 @@
 (define (cdr p)
   (field-ref p "cdr"))
 
+(define (set-car! p x)
+  (cond
+   ((pair? p)
+    (set-field! p "car" x))))
+
+(define (set-cdr! p x)
+  (cond
+   ((pair? p)
+    (set-field! p "cdr" x))))
+
 (define (eq? a b)
   (operator "==" a b))
 
@@ -53,33 +63,72 @@
   ;; used in expand.scm
   (if (= i (field-ref a "length"))
       null  ; dirty secret..!
-      (cons (field-ref a i) (get-rest-arguments a (+ i 1)))))
+      (cons (field-ref a i) (get-rest-arguments a (operator "+" i 1)))))
 
 (define (not x)
   (if x false true))
 
+(define (list->array t)
+  (let ((res (Array)))
+    (let loop ((t t))
+      (cond
+       ((null? t) res)
+       (else
+        ((field-ref res "push") (car t))
+        (loop (cdr t)))))))
+
+(define (print-list t)
+  (displayln "(")
+  (let loop ((t t))
+    (cond
+     ((not (null? t))
+      (displayln (car t))
+      (loop (cdr t)))))
+  (displayln ")"))
+
+(define (apply f arg . args)
+  (let ((args (let loop ((args (cons arg args)))
+                (let ((arg (car args)))
+                  (if (null? (cdr args))
+                      arg
+                      (cons arg (loop (cdr args))))))))
+    ((field-ref f "apply") '() (list->array args))))  ; relies upon '() compiling to "null"
+
+(define (foldl f x t)
+  (if (null? t)
+      x
+      (foldl f (f (car t) x) (cdr t))))
+
+(define (foldr f x t)
+  (if (null? t)
+      x
+      (f (car t) (foldr f x (cdr t)))))
+
 (define (for-each f t)
-  (cond
-   ((not (null? t))
-    (f (car t))
-    (for-each f (cdr t)))))
+  (foldr (lambda (a res) (f a) res) #f t))
 
 (define (map f t)
   (if (null? t)
       '()
       (cons (f (car t)) (map f (cdr t)))))
 
-(define (+ a b)
-  (operator "+" a b))
+(define (+ . xs)
+  (foldl (lambda (a b) (operator "+" a b)) 0 xs))
 
-(define (- a b)
-  (operator "-" a b))
+(define (- x . xs)
+  (cond
+   ((null? xs) (operator "-" 0 x))
+   (else
+    (foldl (lambda (b a) (operator "-" b a)) x xs))))
 
-(define (* a b)
-  (operator "*" a b))
+(define (* . xs)
+  (foldl (lambda (a b) (operator "*" a b)) 0 xs))
 
-(define (/ a b)
-  (operator "/" a b))
+(define (/ x . xs)
+  (if (null? xs)
+      (operator "/" 1 x)
+      (foldl (lambda (b a) (operator "/" a b)) x xs)))
+
 
 (define (modulo a b)
   (operator "%" a b))
@@ -130,8 +179,20 @@
     v))
 
 (define (string-append . strings)
-  (let loop ((strs strings) (res ""))
-    (if (null? strs)
-        res
-        (loop (cdr strs)
-              (operator "+" res (car strs))))))
+  (foldr (lambda (a b) (operator "+" a b)) "" strings))
+
+;; symbols
+
+(define (string->symbol s)
+  (let ((o (make-object)))
+    (field-set! o "string" s)
+    (field-set! o "type" "symbol")
+    o))
+
+(define (symbol->string sym)
+  (field-ref sym "string"))
+
+(define (symbol? x)
+  (is-type? x "symbol"))
+
+(field-ref (make-object) "a")
