@@ -52,7 +52,7 @@
 (define current-rename-dictionary (make-parameter (make-hash)))
 
 (define (format-symbol dict sym)
-  (string->symbol (format "~A_~A" sym (hash-count dict))))
+  (string->symbol (format "~A-~A" sym (hash-count dict))))
 
 (define (new-symbol! dict sym)
   (define renamed (format-symbol dict sym))
