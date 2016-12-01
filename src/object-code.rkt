@@ -15,7 +15,7 @@
    (format-field-set! of field to))
   (((list 'operator operator lhs rhs))
    (format-operator operator lhs rhs))
-  (((list 'make-object)) "{}")
+  (((list 'make-object)) "({})")
   (((list 'set! op exp))
    (format-set! op exp))
   (((list* op args))
