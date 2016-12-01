@@ -59,5 +59,15 @@
   (hash-set! dict sym renamed)
   renamed)
 
-(define (scope-rename form (dict (current-rename-dictionary)))
+(define (symbol-rename form dict)
   (hash-ref dict form (lambda () (new-symbol! dict form))))
+
+(define (pair-rename pair dict)
+  (cons (scope-rename (car pair) dict)
+        (scope-rename (cdr pair) dict)))
+
+(define (scope-rename form (dict (current-rename-dictionary)))
+  (cond
+   ((symbol? form) (symbol-rename form dict))
+   ((pair? form) (pair-rename form dict))
+   (else form)))
