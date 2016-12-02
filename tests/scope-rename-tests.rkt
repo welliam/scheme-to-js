@@ -5,7 +5,8 @@
 (define/provide-test-suite scope-rename-tests
   symbols
   lists
-  quotes)
+  quotes
+  weird-quotes)
 
 ;; to feature (protect var1 ...) form that compiles to some value but
 ;; updates dictionary with variables bound to themselves
@@ -25,3 +26,7 @@
 (define-test-suite quotes
   (check-equal? (scope-rename '(quote a)) '(quote a))
   (check-equal? (scope-rename '(quote (a b c))) '(quote (a b c))))
+
+(define-test-suite weird-quotes
+  (check-not-equal? (second (scope-rename '(foo quote bar))) 'quote)
+  (check-not-equal? (scope-rename 'quote) 'quote))

@@ -62,9 +62,11 @@
 (define (symbol-rename form dict)
   (hash-ref dict form (lambda () (new-symbol! dict form))))
 
-(define (pair-rename pair dict)
-  (cons (scope-rename (car pair) dict)
-        (scope-rename (cdr pair) dict)))
+(define (pair-rename pairs dict)
+  (if (not (pair? pairs))
+      (scope-rename pairs dict)
+      (cons (scope-rename (car pairs) dict)
+            (pair-rename (cdr pairs) dict))))
 
 (define (scope-rename form (dict (current-rename-dictionary)))
   (cond
