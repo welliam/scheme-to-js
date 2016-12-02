@@ -69,5 +69,8 @@
 (define (scope-rename form (dict (current-rename-dictionary)))
   (cond
    ((symbol? form) (symbol-rename form dict))
-   ((pair? form) (pair-rename form dict))
+   ((pair? form)
+    (if (eq? (car form) 'quote)
+        form
+        (pair-rename form dict)))
    (else form)))
